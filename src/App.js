@@ -9,17 +9,20 @@ class App extends Component {
     newInput: "",
     alpha: false,
     topics: [],
+    eInput: false,
+    eDesc: false,
+    eTitle: false,
     agenda: [
-    {
-      title: "Angular",
-      description: "Some descroption anbout hte angular",
-      topics: ["Introduction", "Typescript", "Under versiom"]
-    },
-    {
-      title: "Vue",
-      description: "Some descroption anbout hte angular",
-      topics: ["Introduction", "Typescript", "Under versiom"]
-    },],
+      {
+        title: "Angular",
+        description: "Some descroption anbout hte angular",
+        topics: ["Introduction", "Typescript", "Under versiom"]
+      },
+      {
+        title: "Vue",
+        description: "Some descroption anbout hte angular",
+        topics: ["Introduction", "Typescript", "Under versiom"]
+      },],
   }
 
   handleChange = (e) => {
@@ -27,6 +30,12 @@ class App extends Component {
       ...data,
       [e.target.name]: e.target.value
     }));
+
+    ((!e.target.value) && (e.target.name === "newTitle")) ? (this.setState({ eTitle: true })) : (((e.target.value) && (e.target.name === "newTitle")) ? (this.setState({ eTitle: false })) : (console.log(" ")));
+
+    ((!e.target.value) && (e.target.name === "newDescription")) ? (this.setState({ eDesc: true })) : (((e.target.value) && (e.target.name === "newDescription")) ? (this.setState({ eDesc: false })) : (console.log(" ")));
+
+    ((!e.target.value) && (e.target.name === "newInput")) ? (this.setState({ eInput: true })) : (((e.target.value) && (e.target.name === "newInput")) ? (this.setState({ eInput: false })) : (console.log(" ")));
   }
 
   addTopic = (e) => {
@@ -67,7 +76,7 @@ class App extends Component {
             <button className="btn btn-info" role="goToView" onClick={this.toggleView}>Click To View Agenda</button>
             <form>
               <div className="my-3">
-                <label htmlFor="newTitle" className="form-label">Title</label>                
+                <label htmlFor="newTitle" className="form-label">Title</label>
                 <input type="text"
                   name="newTitle"
                   placeholder="Enter the title"
@@ -76,14 +85,13 @@ class App extends Component {
                   onChange={(e) => this.handleChange(e)}
                   value={this.state.newTitle} />
                 <small className="text-danger" data-testid="invalidTitle">
-                  {/* 
-                 *show empty string if title input is valid
-                 * else show Title is required
-                */}
+                  {
+                    this.state.eTitle ? ("Title is required") : (" ")
+                  }
                 </small>
               </div>
               <div className="my-3">
-                <label htmlFor="newDescription" className="form-label">Description</label>                
+                <label htmlFor="newDescription" className="form-label">Description</label>
                 <input
                   type="text"
                   name="newDescription"
@@ -93,14 +101,13 @@ class App extends Component {
                   value={this.state.newDescription}
                   onChange={(e) => this.handleChange(e)} />
                 <small className="text-danger" data-testid="invalidDescription">
-                  {/*  
-                show empty string is description input is valid
-                else show 'Decription is required'
-                */}
+                  {
+                    (this.state.eDesc) ? ("Description is required") : (" ")
+                  }
                 </small>
               </div>
               <div className="my-3 w-50">
-                <label htmlFor="newInput" className="form-label">Enter topic</label>                
+                <label htmlFor="newInput" className="form-label">Enter topic</label>
                 <input
                   type="text"
                   name="newInput"
@@ -110,17 +117,14 @@ class App extends Component {
                   value={this.state.newInput}
                   onChange={(e) => this.handleChange(e)} />
                 <small className="text-danger" data-testid="invalidDescription">
-                  {/*  
-                show empty string if topic input is valid
-                else show 'Topic is required'
-                */}
+                  {
+                    (this.state.eInput) ? ((this.state.topics.length == 0) ? ("Topic is required") : ("")) : (" ") 
+                  }
                 </small>
               </div>
 
-              <button className="btn btn-success addAlign" role="addTopicBtn" onClick={(e) => this.addTopic(e)}>+ Add Topic</button>
-
-              <button className="btn btn-success submitAlign" role="submitAgendaBtn" onClick={(e) => this.handleSave(e)}>Submit Agenda</button>
-
+              <button className="btn btn-success addAlign" role="addTopicBtn" disabled={!this.state.newInput} onClick={(e) => this.addTopic(e)}>+ Add Topic</button>
+              <button className="btn btn-success submitAlign" role="submitAgendaBtn" disabled={(!this.state.newTitle) || (!this.state.newDescription) || (this.state.topics.length === 0)} onClick={(e) => this.handleSave(e)}>Submit Agenda</button>
             </form>
             {
               alpha ? (<div className="card my-3">
